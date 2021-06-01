@@ -4,11 +4,14 @@
 
 #imports
 import pandas as pd
-import json, bz2, utils
+import json, bz2, utils, time
 
 def download_images(res_json, path):
     ''' Funcion para descargar todas las imagenes indicadas como respuesta en un json '''
-    path = f'{path}/q_hits'
+    #partial path to the working directory
+    sys_path = ""
+    path = f'{sys_path}/{path}/q_hits'
+    res_json = f'{sys_path}/{res_json}'
     q_res = None
     with open(res_json, 'rb') as f:
         data = f.read()
@@ -18,7 +21,9 @@ def download_images(res_json, path):
     if q_res:
         for item in q_res:
             f_name = f"{path}/res1.png"
-            utils.download_img(item["product_image_url"], f_name)            
+            utils.download_img(item["product_image_url"], f_name)
+            #delay para no colapsar la pagina
+            time.sleep(0.2)
     return len(q_res)
 
 def download_query_results(query_csv):
